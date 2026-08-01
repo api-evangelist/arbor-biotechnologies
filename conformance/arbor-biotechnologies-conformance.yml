@@ -1,0 +1,117 @@
+generated: '2026-07-31'
+method: derived
+source: >-
+  openapi/arbor-biotechnologies-content-openapi.yml plus live observation of
+  https://arbor.bio/wp-json on 2026-07-31
+note: >-
+  Which cross-cutting standards this surface does and does not meet. Arbor Biotechnologies
+  publishes no compliance claims of any kind for its API surface, so nothing here is a
+  provider assertion — every entry is derived from what was observed. The company operates
+  no trust center and names no security certifications publicly; a `Compliance` pointer is
+  therefore deliberately NOT emitted in apis.yml.
+standards:
+- id: rest
+  conforms: true
+  evidence: >-
+    Resource-oriented paths, GET semantics, JSON representations, HAL-style _links relation
+    map on every object.
+- id: json
+  conforms: true
+  evidence: All responses are application/json; charset=UTF-8.
+- id: openapi
+  conforms: false
+  evidence: >-
+    Arbor publishes no OpenAPI. The spec in openapi/ was derived by API Evangelist from the
+    live route index; it is not a provider artifact.
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 security scheme; /.well-known/oauth-authorization-server returns 404.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404.
+- id: rfc7617-http-basic
+  conforms: true
+  evidence: >-
+    WordPress application passwords are advertised in the route index and use HTTP Basic.
+    Applies only to write routes; no public credentials are issued.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors use the WordPress envelope {code, message, data.status} with media type
+    application/json. No type URI, no application/problem+json.
+- id: rfc8288-web-linking
+  conforms: true
+  evidence: >-
+    Collection responses return a Link header with rel=next / rel=prev, and it is
+    CORS-exposed via access-control-expose-headers.
+- id: pagination
+  conforms: true
+  evidence: >-
+    page / per_page query parameters with X-WP-Total and X-WP-TotalPages response headers.
+    per_page is bounded at 100 and violations return 400 rest_invalid_param.
+- id: idempotency
+  conforms: false
+  evidence: >-
+    No idempotency key contract. All published operations are GET, so HTTP idempotency holds,
+    but there is no retry-safety mechanism for writes because no write route is reachable.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation headers observed; no deprecation policy published.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: https://arbor.bio/.well-known/security.txt returns 404.
+- id: rfc8615-well-known
+  conforms: false
+  evidence: >-
+    No /.well-known/ document is served. All ten probed paths returned 404, including
+    api-catalog, ai-plugin.json, agent-card.json and agent.json.
+- id: cors
+  conforms: true
+  evidence: >-
+    access-control-allow-headers (Authorization, X-WP-Nonce, Content-Disposition,
+    Content-MD5, Content-Type) and access-control-expose-headers (X-WP-Total,
+    X-WP-TotalPages, Link) are set, so browser clients can page cross-origin.
+- id: oembed-1.0
+  conforms: true
+  evidence: >-
+    /oembed/1.0/embed returns a valid oEmbed 1.0 document with version, provider_name,
+    provider_url, title, type and html.
+- id: rss-2.0
+  conforms: true
+  evidence: https://arbor.bio/feed/ serves a valid RSS 2.0 channel with content, dc, atom and sy modules.
+- id: sitemaps-xml
+  conforms: true
+  evidence: https://arbor.bio/sitemap_index.xml serves a Yoast-generated sitemap index.
+- id: schema-org
+  conforms: true
+  evidence: >-
+    Posts and pages expose yoast_head_json containing a schema.org @graph (Organization,
+    WebSite, WebPage, Article), and /yoast/v1/get_head returns the same for any site URL.
+- id: mcp
+  conforms: false
+  evidence: No MCP server. mcp.arbor.bio does not resolve; no tools/list endpoint found.
+- id: a2a
+  conforms: false
+  evidence: >-
+    No agent card at /.well-known/agent-card.json or /.well-known/agent.json on arbor.bio or
+    www.arbor.bio — both 404.
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    No event, streaming or webhook surface exists. Not applicable rather than deficient.
+- id: hipaa
+  conforms: false
+  evidence: >-
+    Not claimed. The API carries only public marketing and press content — no patient,
+    clinical or personal health data is exposed through it.
+- id: gdpr
+  conforms: false
+  evidence: >-
+    Arbor publishes a privacy policy at https://arbor.bio/privacy-policy/ but makes no GDPR
+    certification or compliance-program claim, and none applies to this anonymous read surface.
+- id: soc2
+  conforms: false
+  evidence: Not claimed anywhere on the public site. No trust center exists; trust.arbor.bio does not resolve.
+- id: iso27001
+  conforms: false
+  evidence: Not claimed anywhere on the public site.

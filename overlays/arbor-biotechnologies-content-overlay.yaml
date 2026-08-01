@@ -1,0 +1,81 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Arbor Biotechnologies Content API
+  version: 1.0.0
+extends: openapi/arbor-biotechnologies-content-openapi.yml
+x-generated: '2026-07-31'
+x-method: generated
+x-note: >-
+  Arbor Biotechnologies publishes no OpenAPI, so there is no provider-authored original to
+  preserve. The spec this overlay extends was itself derived by API Evangelist from the live
+  WordPress route index. These actions record the judgements API Evangelist layered on top of
+  the raw route data — posture flags, agent guidance and the observed-versus-declared
+  discrepancies — separately from the derived spec, so a future round can regenerate the spec
+  from a fresh route index without losing them.
+actions:
+- target: $.info
+  description: Mark provenance and API posture on the document.
+  update:
+    x-apievangelist-enriched: '2026-07-31'
+    x-apievangelist-posture: incidental-cms-surface
+    x-apievangelist-provider-published: false
+    x-apievangelist-supported: false
+    x-apievangelist-sector: biotechnology
+- target: $.info
+  description: Record the non-obvious operational caveats a consumer needs before the first call.
+  update:
+    x-apievangelist-caveats:
+    - >-
+      The site's security layer returns HTTP 406 to requests with a non-browser User-Agent
+      while still serving the correct JSON body. Send a browser User-Agent to get a clean 200.
+    - >-
+      No rate limit is published and no RateLimit headers are returned, but a WAF (Wordfence)
+      fronts the API and will throttle aggressive callers without warning.
+    - >-
+      Arbor issues no credentials. If a route returns 401 there is no path to access it — do
+      not retry and do not attempt to obtain a key.
+- target: $.paths['/wp/v2/media'].get
+  description: Flag that the total-count header and the anonymously visible body disagree.
+  update:
+    x-apievangelist-discrepancy:
+      header_total: 394
+      anonymous_visible: 4
+      observed: '2026-07-31'
+      note: >-
+        X-WP-Total counts the whole library; the response body is filtered to what an
+        anonymous caller may read. Treat the header as an upper bound only. Files themselves
+        remain fetchable at their /wp-content/uploads/ source_url, which robots.txt Allows.
+- target: $.paths['/wp/v2/tags'].get
+  description: Flag an empty-but-public collection so consumers do not build on it.
+  update:
+    x-apievangelist-empty-collection: true
+    x-apievangelist-note: >-
+      The post_tag taxonomy is registered and the route is public, but zero terms exist.
+      Classification on this site is by category only.
+- target: $.paths['/wp/v2/posts'].get
+  description: Point consumers at the cheap projection first.
+  update:
+    x-apievangelist-guidance: >-
+      This is the highest-value collection on the surface — 59 dated Arbor press releases
+      from 2018 to 2026. Always pass _fields; a full post object carries rendered HTML plus a
+      yoast_head SEO block and a yoast_head_json schema.org graph.
+- target: $.paths['/wp/v2/search'].get
+  description: Mark search as the preferred entry point for keyword lookups.
+  update:
+    x-apievangelist-guidance: >-
+      Prefer searchContent over listPosts + client-side filtering when looking for a specific
+      announcement — it returns lightweight hits across all content types with an embeddable
+      _links.self to the full object.
+- target: $.components.schemas.Error
+  description: Name the error family explicitly for agents that expect RFC 9457.
+  update:
+    x-apievangelist-error-format: wordpress-rest
+    x-apievangelist-rfc9457: false
+    x-apievangelist-branch-on: code
+- target: $.components.securitySchemes.applicationPassword
+  description: Record that the declared scheme is unreachable in practice.
+  update:
+    x-apievangelist-reachable: false
+    x-apievangelist-note: >-
+      Advertised by the WordPress platform, not offered by Arbor. No third party can obtain
+      an application password for this site.

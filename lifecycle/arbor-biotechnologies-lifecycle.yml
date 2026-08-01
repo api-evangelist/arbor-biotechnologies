@@ -1,0 +1,55 @@
+generated: '2026-07-31'
+method: derived
+source: >-
+  openapi/arbor-biotechnologies-content-openapi.yml and the live route index at
+  https://arbor.bio/wp-json, probed 2026-07-31
+note: >-
+  Arbor Biotechnologies publishes no versioning policy, no deprecation policy, no SLA and no
+  status page for this surface — it is an incidental CMS API, not a supported product. What
+  follows is what the platform itself implies, recorded so the absences are explicit rather
+  than assumed. status.arbor.bio does not resolve.
+versioning:
+  scheme: uri-path namespace
+  current: wp/v2
+  docs: null
+  detail: >-
+    The version is a namespace segment (/wp-json/wp/v2/...). It is inherited from the
+    WordPress core release the site runs, not chosen by Arbor. 18 namespaces are registered;
+    the ones carrying company content are wp/v2 (core), oembed/1.0 and yoast/v1.
+  namespaces_registered: [wp/v2, oembed/1.0, batch/v1, cf7apps/v1, contact-form-7/v1,
+    redirection/v1, simple-history/v1, wordfence/v1, yoast/v1, wp-super-cache/v1,
+    popup-maker/v1, popup-maker/v2, pum/v1, ai1wm/v1, monsterinsights/v1,
+    regenerate-thumbnails/v1, wp-site-health/v1, wp-block-editor/v1, wp-abilities/v1]
+  provider_controlled: false
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  detail: >-
+    No RFC 8594 Sunset or Deprecation headers were observed and no policy is published. The
+    surface can change without notice whenever the site's WordPress core or plugin set is
+    updated — plugin namespaces in particular appear and disappear with the plugin.
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+  detail: No service level is offered or implied. Availability tracks the marketing website.
+status_page: null
+support:
+  channel: https://arbor.bio/get-in-touch/
+  detail: >-
+    A general corporate contact form. There is no developer support channel, no community
+    forum and no published API contact address.
+change_communication:
+  changelog: null
+  detail: >-
+    No changelog exists for this surface. The company's own announcements are published as
+    posts on the API itself (/wp/v2/posts, 59 items, category `press-release`) and syndicated
+    at https://arbor.bio/feed/, but they cover the business, not the API.
+stability:
+  assessment: unmanaged
+  detail: >-
+    Treat every field as subject to change. In particular, `acf`, `yoast_head` and
+    `yoast_head_json` are plugin-provided and would vanish if the plugin were removed;
+    `class_list` is a WordPress 6.7+ addition. Pin nothing, and use _fields to depend on the
+    narrowest set of attributes you actually need.

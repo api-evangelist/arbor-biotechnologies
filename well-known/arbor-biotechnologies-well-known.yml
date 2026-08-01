@@ -1,0 +1,43 @@
+generated: '2026-07-31'
+method: probed
+source: live HTTP probes run 2026-07-31
+note: >-
+  Arbor Biotechnologies serves no /.well-known/ document. Every path below returned HTTP 404
+  with an HTML body (the WordPress 404 template), which is a genuine miss rather than an SPA
+  catch-all. No raw files were saved because nothing was found. This index records the
+  absence so a later run does not re-probe blind, and so the miss is auditable.
+hosts_probed:
+- https://arbor.bio
+- https://www.arbor.bio
+subdomains_probed:
+  note: All resolved NXDOMAIN — there is no API, developer, docs, status, trust, MCP, app or portal host.
+  hosts: [api.arbor.bio, developer.arbor.bio, docs.arbor.bio, status.arbor.bio, trust.arbor.bio,
+    mcp.arbor.bio, app.arbor.bio, portal.arbor.bio]
+host: https://arbor.bio
+documents:
+- {path: /.well-known/security.txt, status: 404, spec: RFC 9116, file: null}
+- {path: /.well-known/openid-configuration, status: 404, spec: OpenID Connect Discovery 1.0, file: null}
+- {path: /.well-known/oauth-authorization-server, status: 404, spec: RFC 8414, file: null}
+- {path: /.well-known/oauth-protected-resource, status: 404, spec: RFC 9728, file: null}
+- {path: /.well-known/api-catalog, status: 404, spec: RFC 9727, file: null}
+- {path: /.well-known/ai-plugin.json, status: 404, spec: OpenAI plugin manifest, file: null}
+- {path: /.well-known/agent-card.json, status: 404, spec: A2A 1.0.0, file: null}
+- {path: /.well-known/agent.json, status: 404, spec: A2A pre-0.3 legacy, file: null}
+other_discovery_paths:
+  note: >-
+    Probed alongside /.well-known/. The wp-json hit is the only machine-readable contract on
+    the domain; everything else missed.
+  paths:
+  - {path: /openapi.json, status: 404}
+  - {path: /openapi.yaml, status: 404}
+  - {path: /swagger.json, status: 404}
+  - {path: /api-docs, status: 404}
+  - {path: /api, status: 404}
+  - {path: /graphql, status: 404}
+  - {path: /llms.txt, status: 404}
+  - {path: /wp-json, status: 200, note: 'WordPress REST route index — 18 namespaces, 341 routes'}
+  - {path: /robots.txt, status: 200, note: 'No Crawl-delay; /wp-json/ is not disallowed'}
+  - {path: /sitemap_index.xml, status: 200, note: Yoast sitemap index}
+  - {path: /feed/, status: 200, note: RSS 2.0 press release feed}
+www_host:
+  note: https://www.arbor.bio 301-redirects every path to the apex host; no separate surface.

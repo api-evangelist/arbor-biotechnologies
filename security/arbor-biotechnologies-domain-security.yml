@@ -1,0 +1,16 @@
+generated: '2026-07-31'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: arbor.bio
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  8 05:47:36 2026 GMT
+  hsts: false
+domains:
+- domain: arbor.bio
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: none

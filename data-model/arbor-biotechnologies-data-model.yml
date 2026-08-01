@@ -1,0 +1,141 @@
+generated: '2026-07-31'
+method: derived
+source: >-
+  openapi/arbor-biotechnologies-content-openapi.yml plus the live route index, taxonomy
+  registration and sample payloads observed at https://arbor.bio/wp-json on 2026-07-31
+note: >-
+  Entity graph of the WordPress content model as this site actually exposes it. Relationships
+  were derived from id-reference fields present in real responses (author, categories, tags,
+  featured_media, parent, post) and from /wp/v2/taxonomies and /wp/v2/types — not from a
+  published object reference, because Arbor publishes none.
+id_scheme:
+  type: integer
+  prefixed: false
+  detail: >-
+    Bare auto-increment integers, unique within a post type or taxonomy rather than globally.
+    An id alone does not identify its entity — always carry the collection with it. Posts and
+    attachments share the WordPress posts table, so their ids are drawn from one sequence,
+    but a page id will still 404 against /wp/v2/media.
+entities:
+- name: Post
+  route: /wp/v2/posts
+  operations: [listPosts, getPost]
+  count_observed: 59
+  date_range_observed: 2018 to 2026-06-25
+  description: >-
+    Arbor's press releases and company announcements — financings, partnership news
+    (Chiesi, Vertex, Allogene, Samsung Life Science Fund), regulatory designations for
+    ABO-101, conference presentations (ASGCT) and executive appointments. This is the
+    substantive machine-readable content on the site.
+  key_fields: [id, date, date_gmt, modified, modified_gmt, slug, status, link, title, content,
+    excerpt, author, featured_media, categories, tags, format, sticky, meta, acf, class_list,
+    yoast_head, yoast_head_json, _links]
+  relationships:
+  - {type: belongs_to, target: User, via: author, note: resolves to an id only; /wp/v2/users is 401 anonymously}
+  - {type: has_one, target: Media, via: featured_media}
+  - {type: has_many, target: Category, via: categories}
+  - {type: has_many, target: Tag, via: tags, note: always empty on this site}
+- name: Page
+  route: /wp/v2/pages
+  operations: [listPages, getPage]
+  count_observed: 11
+  description: >-
+    The static site: clinical-trial, pipeline, what-we-do, who-we-are, inside-arbor,
+    stay-updated, get-in-touch, site-map, privacy-policy, terms-of-use and the home page.
+  key_fields: [id, date, slug, status, link, title, content, excerpt, author, featured_media,
+    parent, menu_order, template, meta, acf, yoast_head, yoast_head_json, _links]
+  relationships:
+  - {type: belongs_to, target: User, via: author}
+  - {type: has_one, target: Media, via: featured_media}
+  - {type: belongs_to, target: Page, via: parent, note: all 11 pages are top level (parent 0) in the REST view, even though the site menu nests them}
+- name: Media
+  route: /wp/v2/media
+  operations: [listMedia, getMedia]
+  count_observed: 4
+  count_reported: 394
+  description: >-
+    The media library — logos, leadership headshots, pipeline graphics and press assets.
+    X-WP-Total reports 394 items but anonymous callers are returned only 4; the remainder is
+    restricted. Direct file URLs under /wp-content/uploads/ remain publicly fetchable and are
+    explicitly Allowed in robots.txt.
+  key_fields: [id, date, slug, link, title, author, media_type, mime_type, source_url,
+    media_details, alt_text, caption, post, _links]
+  relationships:
+  - {type: belongs_to, target: User, via: author}
+  - {type: belongs_to, target: Post, via: post, note: the object the file was uploaded to}
+- name: Category
+  route: /wp/v2/categories
+  operations: [listCategories, getCategory]
+  count_observed: 11
+  taxonomy: category
+  hierarchical: true
+  description: >-
+    The only classification in active use. One content category, `press-release` (57 posts),
+    plus per-year archive categories 2018-2026 and an empty `uncategorized`.
+  key_fields: [id, count, description, link, name, slug, taxonomy, parent, meta, _links]
+  relationships:
+  - {type: belongs_to, target: Category, via: parent}
+  - {type: has_many, target: Post, via: 'Post.categories'}
+- name: Tag
+  route: /wp/v2/tags
+  operations: [listTags, getTag]
+  count_observed: 0
+  taxonomy: post_tag
+  hierarchical: false
+  description: Registered and publicly readable, but the collection is empty. This site does not tag.
+  relationships:
+  - {type: has_many, target: Post, via: 'Post.tags'}
+- name: ContactForm
+  route: /wp/v2/wpcf7_contact_form
+  operations: [listContactForms, getContactForm]
+  count_observed: 1
+  description: >-
+    Contact Form 7 form definition backing the /get-in-touch/ page, exposed as a custom post
+    type. Read-only metadata — this route does not submit the form.
+  relationships: []
+- name: User
+  route: /wp/v2/users
+  operations: []
+  count_observed: null
+  description: >-
+    Not exposed. Anonymous callers receive 401 rest_user_cannot_view, so author ids appearing
+    on posts and pages cannot be resolved to names. Excluded from the OpenAPI.
+- name: Comment
+  route: /wp/v2/comments
+  operations: []
+  count_observed: 0
+  description: >-
+    Permanently disabled — 403 rest_comment_disabled. Excluded from the OpenAPI.
+metadata_entities:
+- name: Type
+  route: /wp/v2/types
+  operations: [listTypes, getType]
+  description: >-
+    15 registered post types, of which only post, page, attachment and wpcf7_contact_form
+    are anonymously readable. The rest (nav_menu_item, wp_block, wp_template,
+    wp_template_part, wp_global_styles, wp_navigation, wp_font_family, wp_font_face, popup,
+    popup_theme, pum_cta) are editor and plugin constructs.
+- name: Taxonomy
+  route: /wp/v2/taxonomies
+  operations: [listTaxonomies, getTaxonomy]
+  description: Registered taxonomies (category, post_tag and editor taxonomies) and the post types they apply to.
+- name: Status
+  route: /wp/v2/statuses
+  operations: [listStatuses, getStatus]
+  description: Registered post statuses. Only `publish` is exposed anonymously.
+- name: SearchResult
+  route: /wp/v2/search
+  operations: [searchContent]
+  count_observed: 60
+  description: >-
+    A projection, not a stored entity — a lightweight hit (id, title, url, type, subtype)
+    across all searchable content, with an embeddable _links.self to the full object.
+relationship_traversal:
+  mechanism: _links + _embed
+  detail: >-
+    Every object carries a _links map (self, collection, about, author, wp:featuredmedia,
+    wp:attachment, wp:term, replies). Appending _embed to a request inlines those linked
+    objects under _embedded, resolving author, featured media and terms in a single round
+    trip instead of one call per relationship. The author relation will not resolve for
+    anonymous callers.
+render: null

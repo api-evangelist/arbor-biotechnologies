@@ -1,0 +1,114 @@
+generated: '2026-07-31'
+method: derived
+source: >-
+  openapi/arbor-biotechnologies-content-openapi.yml, plus error responses observed live
+  against https://arbor.bio/wp-json on 2026-07-31
+format: wordpress-rest
+rfc9457: false
+note: >-
+  Arbor publishes no error reference — there was no docs page to search, so every entry below
+  was observed on the wire or read from the platform's own route index. This is the WordPress
+  REST error envelope, not RFC 9457 Problem Details.
+envelope:
+  media_type: application/json
+  fields:
+    code: Machine-readable error slug. This is the field to branch on.
+    message: Human-readable sentence, subject to change; do not parse.
+    data.status: The HTTP status repeated inside the body.
+    data.params: Present on validation failures — a map of parameter name to the reason it failed.
+    data.details: Present on validation failures — per-parameter structured detail with its own code.
+  example: |
+    {"code":"rest_invalid_param","message":"Invalid parameter(s): per_page","data":{"status":400,
+     "params":{"per_page":"per_page must be between 1 (inclusive) and 100 (inclusive)"},
+     "details":{"per_page":{"code":"rest_out_of_bounds",
+      "message":"per_page must be between 1 (inclusive) and 100 (inclusive)","data":null}}}}
+problems:
+- status: 400
+  code: rest_invalid_param
+  title: A query parameter failed validation
+  observed: true
+  remediation: >-
+    Read data.details for the failing parameter and its nested code. The common case on this
+    surface is per_page outside 1-100 (nested code rest_out_of_bounds).
+  source_operation: openapi/arbor-biotechnologies-content-openapi.yml#listPosts
+- status: 404
+  code: rest_post_invalid_id
+  title: Invalid post ID
+  observed: true
+  remediation: >-
+    The id does not exist, or the object is not publicly readable. Ids are per-post-type, not
+    global — a valid page id is not a valid media id. Resolve ids from a list or search call
+    rather than guessing.
+  source_operation: openapi/arbor-biotechnologies-content-openapi.yml#getPost
+- status: 404
+  code: rest_term_invalid
+  title: Term does not exist
+  observed: false
+  note: Declared by the platform for taxonomy routes; not reproduced because term ids are few and stable.
+  remediation: Resolve category ids from listCategories.
+  source_operation: openapi/arbor-biotechnologies-content-openapi.yml#getCategory
+- status: 404
+  code: rest_no_route
+  title: No route was found matching the URL and request method
+  observed: false
+  note: Standard WordPress response for an unregistered path under /wp-json.
+  remediation: Check the path against the live route index at https://arbor.bio/wp-json.
+- status: 401
+  code: rest_forbidden
+  title: Sorry, you are not allowed to do that
+  observed: true
+  remediation: >-
+    The route requires authentication. Arbor issues no public credentials, so this is
+    terminal for third parties — do not retry. Returned by /wp/v2/settings and
+    /wp-site-health/v1/*.
+- status: 401
+  code: rest_user_cannot_view
+  title: Sorry, you are not allowed to list users
+  observed: true
+  remediation: Terminal for anonymous callers. Author names are not exposed; posts carry an author id only.
+- status: 401
+  code: rest_cannot_view_plugins
+  title: Sorry, you are not allowed to manage plugins
+  observed: true
+  remediation: Terminal for anonymous callers.
+- status: 401
+  code: rest_cannot_view_themes
+  title: Sorry, you are not allowed to view themes
+  observed: true
+  remediation: Terminal for anonymous callers.
+- status: 401
+  code: rest_block_type_cannot_view
+  title: Sorry, you are not allowed to manage block types
+  observed: true
+  remediation: Terminal for anonymous callers.
+- status: 401
+  code: rest_cannot_view
+  title: Sorry, you are not allowed to view menu locations
+  observed: true
+  remediation: Terminal for anonymous callers.
+- status: 401
+  code: rest_cannot_read
+  title: Sorry, you are not allowed to access font collections
+  observed: true
+  remediation: Terminal for anonymous callers.
+- status: 401
+  code: rest_cannot_manage_widgets
+  title: Sorry, you are not allowed to manage widgets
+  observed: true
+  remediation: Terminal for anonymous callers.
+- status: 403
+  code: rest_comment_disabled
+  title: Comments are disabled
+  observed: true
+  remediation: >-
+    The site runs no comments. The /wp/v2/comments route exists but is permanently closed;
+    do not treat this as transient.
+transport_anomalies:
+- status: 406
+  title: Not Acceptable returned by the site security layer
+  observed: true
+  detail: >-
+    Requests carrying a non-browser User-Agent receive HTTP 406 while the correct JSON body
+    is still returned. This is the site's WAF, not a WordPress REST error — there is no
+    `code` field in these responses. Send a normal browser User-Agent to get a clean 200.
+  remediation: Set a browser User-Agent header; do not treat 406 as a content-negotiation failure.

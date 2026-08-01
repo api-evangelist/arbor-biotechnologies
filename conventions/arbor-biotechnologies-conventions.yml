@@ -1,0 +1,114 @@
+generated: '2026-07-31'
+method: derived
+source: >-
+  openapi/arbor-biotechnologies-content-openapi.yml and live request/response observation of
+  https://arbor.bio/wp-json on 2026-07-31
+note: >-
+  Arbor publishes no API documentation, so none of these conventions are provider-stated —
+  they are the WordPress REST platform defaults, verified against this specific deployment.
+authentication:
+  style: none
+  detail: Every documented operation is anonymous. See authentication/arbor-biotechnologies-authentication.yml.
+idempotency:
+  supported: false
+  detail: >-
+    No idempotency key header or parameter exists on this surface. The documented operations
+    are all GET and therefore idempotent by HTTP semantics, but there is no idempotency
+    contract for retried writes because no write operation is publicly reachable.
+  header: null
+pagination:
+  style: page-number
+  params:
+    page: {type: integer, default: 1, description: 1-based page number.}
+    per_page: {type: integer, default: 10, min: 1, max: 100, description: Values outside 1-100 return HTTP 400 rest_invalid_param.}
+    offset: {type: integer, description: Alternative to page; supported by WordPress core collections.}
+  response_signals:
+    headers:
+    - {name: X-WP-Total, description: Total items in the collection before pagination.}
+    - {name: X-WP-TotalPages, description: Total pages at the current per_page.}
+    - {name: Link, description: RFC 8288 rel=next / rel=prev links.}
+    body: The response body is a bare JSON array with no envelope; all pagination lives in headers.
+  caveat: >-
+    On /wp/v2/media the X-WP-Total header reports 394 while anonymous callers are returned
+    only 4 items. Treat X-WP-Total as an upper bound on that collection, not a promise of
+    what you can read.
+ordering:
+  params:
+    order: {enum: [asc, desc], default: desc}
+    orderby: {enum: [author, date, id, include, modified, parent, relevance, slug, title], default: date}
+filtering:
+  params:
+  - {name: search, applies_to: all collections, description: Free-text match.}
+  - {name: slug, applies_to: posts, pages, categories, tags, description: Exact slug match, repeatable.}
+  - {name: categories, applies_to: posts, description: Filter by category id.}
+  - {name: after, applies_to: posts, description: ISO 8601 lower date bound.}
+  - {name: before, applies_to: posts, description: ISO 8601 upper date bound.}
+  - {name: parent, applies_to: pages, description: Filter to children of a page id.}
+  - {name: media_type, applies_to: media, description: image / video / text / application / audio / file.}
+sparse_fields:
+  supported: true
+  param: _fields
+  style: comma-separated allowlist
+  detail: >-
+    Strongly recommended on this site. A full post object embeds rendered HTML content plus a
+    yoast_head SEO block and a yoast_head_json schema.org graph; _fields=id,date,slug,link,title
+    reduces a page of 59 press releases from hundreds of kilobytes to a few.
+field_expansion:
+  supported: true
+  param: _embed
+  detail: >-
+    Every object carries a _links relation map (self, collection, about, author,
+    wp:featuredmedia, wp:term, replies). Appending _embed inlines those linked objects under
+    _embedded, resolving relationships in one round trip instead of one call per relationship.
+  note: The author relation resolves to an id only — /wp/v2/users is 401 anonymously.
+metadata:
+  supported: true
+  detail: >-
+    Objects expose a `meta` object and an `acf` (Advanced Custom Fields) field. Both are
+    present but carry no populated custom data on this deployment.
+request_tracing:
+  supported: false
+  detail: No request-id or correlation header is issued on any response.
+versioning:
+  scheme: uri-path namespace
+  current: wp/v2
+  detail: >-
+    The version is a namespace segment in the path. 18 namespaces are registered on this
+    site; wp/v2 is WordPress core and the only one carrying company content, alongside
+    oembed/1.0 and yoast/v1. See lifecycle/arbor-biotechnologies-lifecycle.yml.
+error_envelope:
+  format: wordpress-rest
+  rfc9457: false
+  media_type: application/json
+  shape: '{code: string, message: string, data: {status: integer, params?: object, details?: object}}'
+  detail: >-
+    Not RFC 9457 Problem Details — there is no `type` URI, no `title`/`detail` split, and the
+    media type is application/json rather than application/problem+json. The HTTP status is
+    duplicated inside data.status. See errors/arbor-biotechnologies-problem-types.yml.
+rate_limiting:
+  documented: false
+  headers: none observed
+  detail: >-
+    No RateLimit or X-RateLimit headers are returned and no rate limit is published. The site
+    does front the API with a WAF/security layer (Wordfence is registered in the route index)
+    that will throttle or block aggressive callers without a documented budget.
+  robots_txt: >-
+    https://arbor.bio/robots.txt sets no Crawl-delay. It disallows /wp-admin/, /wp-includes/,
+    /wp-content/plugins/, /xmlrpc.php and /feed/, and does not mention /wp-json/.
+caching:
+  detail: >-
+    Collection responses do not carry validators. Single-object responses were observed with
+    `Cache-Control: no-store, no-cache, must-revalidate`, so no client caching is sanctioned.
+  etag: false
+  last_modified: false
+content_negotiation:
+  media_type: application/json; charset=UTF-8
+  detail: >-
+    Only JSON is served. The oEmbed route additionally accepts format=xml. A non-browser
+    User-Agent draws HTTP 406 from the security layer even though the JSON body is still
+    returned — send a browser User-Agent.
+cross_links:
+  authentication: authentication/arbor-biotechnologies-authentication.yml
+  errors: errors/arbor-biotechnologies-problem-types.yml
+  lifecycle: lifecycle/arbor-biotechnologies-lifecycle.yml
+  data_model: data-model/arbor-biotechnologies-data-model.yml

@@ -1,0 +1,66 @@
+generated: '2026-07-31'
+method: derived
+source: >-
+  openapi/arbor-biotechnologies-content-openapi.yml, plus the authentication block of the live
+  route index at https://arbor.bio/wp-json and anonymous probes run on 2026-07-31
+note: >-
+  Arbor Biotechnologies publishes no authentication documentation — there is no developer
+  portal, no signup and no docs page to search, so this artifact stays derived. The entire
+  publicly reachable surface is anonymous: no key is issued and the one declared scheme is
+  closed to third parties in practice.
+summary:
+  types:
+  - http
+  anonymous_read: true
+  credentials_issued_publicly: false
+  api_keys: false
+  oauth2: false
+  oidc: false
+  mtls: false
+  signup_url: null
+  developer_portal: null
+schemes:
+- name: applicationPassword
+  type: http
+  scheme: basic
+  rfc: RFC 7617
+  description: >-
+    WordPress application passwords — a WordPress username plus a generated application
+    password sent as HTTP Basic. The platform advertises the capability, with the authorization
+    endpoint at https://arbor.bio/wp-admin/authorize-application.php. It applies only to write
+    and administrative routes, none of which are in the OpenAPI. Arbor issues no public
+    credentials, so this scheme is declared but unreachable for third parties.
+  applies_to: write and administrative routes
+  reachable_by_third_parties: false
+  sources:
+  - openapi/arbor-biotechnologies-content-openapi.yml
+  - https://arbor.bio/wp-json
+anonymous_access:
+  applies_to: every operation in openapi/arbor-biotechnologies-content-openapi.yml
+  verified: '2026-07-31'
+  detail: >-
+    Each read operation was probed with no credential of any kind and returned HTTP 200.
+    Note that the site fronts the API with a security layer that returns HTTP 406 to requests
+    carrying a non-browser User-Agent while still serving the correct JSON body; sending a
+    normal browser User-Agent yields a clean 200.
+  cors:
+    allow_headers: [Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type]
+    expose_headers: [X-WP-Total, X-WP-TotalPages, Link]
+    note: >-
+      Pagination headers are CORS-exposed, so a browser client can page the collections
+      cross-origin without a proxy.
+denied_anonymously:
+  detail: >-
+    Routes declared in the live index that reject anonymous callers. They are deliberately
+    excluded from the OpenAPI rather than documented as available.
+  routes:
+  - {route: /wp/v2/users, status: 401, code: rest_user_cannot_view}
+  - {route: /wp/v2/settings, status: 401, code: rest_forbidden}
+  - {route: /wp/v2/plugins, status: 401, code: rest_cannot_view_plugins}
+  - {route: /wp/v2/themes, status: 401, code: rest_cannot_view_themes}
+  - {route: /wp/v2/block-types, status: 401, code: rest_block_type_cannot_view}
+  - {route: /wp/v2/menu-locations, status: 401, code: rest_cannot_view}
+  - {route: /wp/v2/font-collections, status: 401, code: rest_cannot_read}
+  - {route: /wp/v2/widget-types, status: 401, code: rest_cannot_manage_widgets}
+  - {route: /wp-site-health/v1/tests/background-updates, status: 401, code: rest_forbidden}
+  - {route: /wp/v2/comments, status: 403, code: rest_comment_disabled}
