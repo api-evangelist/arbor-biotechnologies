@@ -1,0 +1,721 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Arbor Biotechnologies Content API (WordPress REST)",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "posts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List press releases",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/posts",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Items per page. The server rejects values outside 1-100 with HTTP 400."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "Limit to items published after an ISO 8601 date."
+              },
+              {
+                "name": "before",
+                "value": "",
+                "type": "query",
+                "description": "Limit to items published before an ISO 8601 date."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "orderby",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to one or more slugs."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              },
+              {
+                "name": "_embed",
+                "value": "",
+                "type": "query",
+                "description": "Inline linked resources (author, featured media, terms) under `_embedded`, resolving relationships in one round trip."
+              },
+              {
+                "name": "categories",
+                "value": "",
+                "type": "query",
+                "description": "Limit to posts assigned to these category ids."
+              }
+            ]
+          },
+          "docs": "List published posts — Arbor's press releases and company announcements. 59 items observed on 2026-07-31, spanning 2018 to 2026. Paginated; total count and page count are returned in the X-WP-Total and X-WP-TotalPages headers."
+        },
+        {
+          "info": {
+            "name": "Get a press release",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/posts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Integer object id."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              },
+              {
+                "name": "_embed",
+                "value": "",
+                "type": "query",
+                "description": "Inline linked resources (author, featured media, terms) under `_embedded`, resolving relationships in one round trip."
+              }
+            ]
+          },
+          "docs": "Retrieve a single published post by its integer id."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "pages",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List site pages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/pages",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Items per page. The server rejects values outside 1-100 with HTTP 400."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to one or more slugs."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              },
+              {
+                "name": "_embed",
+                "value": "",
+                "type": "query",
+                "description": "Inline linked resources (author, featured media, terms) under `_embedded`, resolving relationships in one round trip."
+              },
+              {
+                "name": "parent",
+                "value": "",
+                "type": "query",
+                "description": "Limit to children of these page ids."
+              }
+            ]
+          },
+          "docs": "List published pages. 11 observed on 2026-07-31 — clinical-trial, pipeline, what-we-do, who-we-are, inside-arbor, stay-updated, get-in-touch, site-map, privacy-policy, terms-of-use and the home page."
+        },
+        {
+          "info": {
+            "name": "Get a site page",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/pages/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Integer object id."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              },
+              {
+                "name": "_embed",
+                "value": "",
+                "type": "query",
+                "description": "Inline linked resources (author, featured media, terms) under `_embedded`, resolving relationships in one round trip."
+              }
+            ]
+          },
+          "docs": "Retrieve a single published page by its integer id."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "media",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List media items",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/media",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Items per page. The server rejects values outside 1-100 with HTTP 400."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              },
+              {
+                "name": "media_type",
+                "value": "",
+                "type": "query",
+                "description": "Limit to a media type."
+              }
+            ]
+          },
+          "docs": "List media library items. X-WP-Total reported 394 on 2026-07-31, but anonymous callers were returned only 4 items — the site restricts most of the library to authenticated users, so the header count and the visible body disagree by design."
+        },
+        {
+          "info": {
+            "name": "Get a media item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/media/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Integer object id."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              }
+            ]
+          },
+          "docs": "Retrieve a single media item by its integer id."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "taxonomies",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/categories",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Items per page. The server rejects values outside 1-100 with HTTP 400."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to one or more slugs."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              }
+            ]
+          },
+          "docs": "List post categories. 11 observed on 2026-07-31 — a `press-release` category with 57 posts plus per-year archive categories 2018 through 2026."
+        },
+        {
+          "info": {
+            "name": "Get a category",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/categories/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Integer object id."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              }
+            ]
+          },
+          "docs": "Get a category"
+        },
+        {
+          "info": {
+            "name": "List tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/tags",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Items per page. The server rejects values outside 1-100 with HTTP 400."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to one or more slugs."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              }
+            ]
+          },
+          "docs": "List post tags. The `post_tag` taxonomy is registered and the route is public, but the collection was empty (X-WP-Total 0) on 2026-07-31 — this site classifies with categories only."
+        },
+        {
+          "info": {
+            "name": "Get a tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/tags/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Integer object id."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              }
+            ]
+          },
+          "docs": "Declared public in the live route index. Not exercised against real data because the tag collection is empty on this site."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "metadata",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List registered post types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/types"
+          },
+          "docs": "The registered post types and their REST base paths. 15 observed, of which only `post`, `page`, `attachment` and `wpcf7_contact_form` are anonymously readable."
+        },
+        {
+          "info": {
+            "name": "Get one registered post type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/types/:type",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "The post type slug, e.g. `post` or `page`."
+              }
+            ]
+          },
+          "docs": "Get one registered post type"
+        },
+        {
+          "info": {
+            "name": "List registered taxonomies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/taxonomies"
+          },
+          "docs": "The registered taxonomies and the post types they apply to."
+        },
+        {
+          "info": {
+            "name": "Get one registered taxonomy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/taxonomies/:taxonomy",
+            "params": [
+              {
+                "name": "taxonomy",
+                "value": "",
+                "type": "path",
+                "description": "The taxonomy slug, e.g. `category` or `post_tag`."
+              }
+            ]
+          },
+          "docs": "Get one registered taxonomy"
+        },
+        {
+          "info": {
+            "name": "List registered post statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/statuses"
+          },
+          "docs": "List registered post statuses"
+        },
+        {
+          "info": {
+            "name": "Get one registered post status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/statuses/:status",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "path",
+                "description": "The status slug, e.g. `publish`."
+              }
+            ]
+          },
+          "docs": "Get one registered post status"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search across all public content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/search",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Items per page. The server rejects values outside 1-100 with HTTP 400."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "The search term."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to an object type."
+              },
+              {
+                "name": "subtype",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to a subtype, e.g. `post` or `page`."
+              },
+              {
+                "name": "_embed",
+                "value": "",
+                "type": "query",
+                "description": "Inline linked resources (author, featured media, terms) under `_embedded`, resolving relationships in one round trip."
+              }
+            ]
+          },
+          "docs": "Cross-content-type search returning lightweight hits (id, title, url, type, subtype) with an embeddable `_links.self` pointing at the full object. 60 objects were searchable on 2026-07-31. This is the cheapest way to find a press release by keyword before fetching it in full."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "forms",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List contact form definitions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/wpcf7_contact_form",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Items per page. The server rejects values outside 1-100 with HTTP 400."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              }
+            ]
+          },
+          "docs": "Contact Form 7 form objects. 1 form observed on 2026-07-31, backing the /get-in-touch/ page. Read-only metadata; this route does not submit a form."
+        },
+        {
+          "info": {
+            "name": "Get a contact form definition",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/wp/v2/wpcf7_contact_form/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Integer object id."
+              },
+              {
+                "name": "_fields",
+                "value": "id,date,slug,link,title",
+                "type": "query",
+                "description": "Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large."
+              }
+            ]
+          },
+          "docs": "Get a contact form definition"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "embed",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get oEmbed data for an Arbor URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/oembed/1.0/embed",
+            "params": [
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "The arbor.bio URL to describe."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format."
+              },
+              {
+                "name": "maxwidth",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "oEmbed 1.0 discovery for any arbor.bio URL — returns provider name, title, author, thumbnail and an embeddable HTML blockquote."
+        },
+        {
+          "info": {
+            "name": "Get SEO head metadata for a URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://arbor.bio/wp-json/yoast/v1/get_head",
+            "params": [
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "The arbor.bio URL to describe."
+              }
+            ]
+          },
+          "docs": "Yoast SEO plugin route returning the rendered `<head>` SEO block (Open Graph, Twitter card, schema.org JSON-LD) for any arbor.bio URL. Useful for extracting structured Organization / Article metadata without scraping the page."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
