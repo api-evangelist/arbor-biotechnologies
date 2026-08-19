@@ -22,7 +22,7 @@ x-tier: profiled
 x-tier-reason: enrichment-pipeline-2026-07-31
 x-sector: biotechnology
 x-api-posture: no-product-api
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-07-31'
 modified: '2026-07-31'
 tags:
