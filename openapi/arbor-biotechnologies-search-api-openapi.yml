@@ -1,0 +1,192 @@
+openapi: 3.2.0
+info:
+  title: Arbor Biotechnologies Content API (WordPress REST) Search API
+  version: 1.0.0
+  summary: Read-only, anonymously accessible content API served by the Arbor Biotechnologies corporate site.
+  description: 'Arbor Biotechnologies publishes no product or developer API. This document was DERIVED by API Evangelist from the live WordPress REST route index at https://arbor.bio/wp-json (18 namespaces, 341 declared routes) on 2026-07-31, and reduced to only those operations that were individually probed WITHOUT credentials and observed returning HTTP 200.
+
+
+    It is an incidental content-management surface, not a supported API product: Arbor issues no keys, publishes no developer documentation, offers no support channel for it, and its terms of use do not mention API access. Every write, administrative and site-configuration route declared in the route index is excluded here because anonymous callers receive 401 (`rest_forbidden`, `rest_cannot_view_plugins`, `rest_cannot_view_themes`, `rest_user_cannot_view`) or 403 (`rest_comment_disabled`).
+
+
+    Observed collection sizes on 2026-07-31: 59 posts (press releases, 2018-2026), 11 pages, 11 categories, 0 tags, 394 media items reported by X-WP-Total of which 4 are returned to anonymous callers, 60 searchable objects, 1 contact form.'
+  contact:
+    name: Arbor Biotechnologies
+    url: https://arbor.bio/get-in-touch/
+  license:
+    name: Proprietary — see Arbor Biotechnologies Terms of Use
+    url: https://arbor.bio/terms-of-use/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-derived-from: https://arbor.bio/wp-json
+  x-derived-on: '2026-07-31'
+  x-provider-published: false
+  x-api-posture: incidental-cms-surface
+servers:
+- url: https://arbor.bio/wp-json
+  description: Production WordPress REST API on the Arbor Biotechnologies corporate site.
+security: []
+tags:
+- name: search
+  description: Cross-content search.
+paths:
+  /wp/v2/search:
+    get:
+      operationId: searchContent
+      summary: Search across all public content
+      description: Cross-content-type search returning lightweight hits (id, title, url, type, subtype) with an embeddable `_links.self` pointing at the full object. 60 objects were searchable on 2026-07-31. This is the cheapest way to find a press release by keyword before fetching it in full.
+      tags:
+      - search
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - name: search
+        in: query
+        description: The search term.
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: Limit results to an object type.
+        schema:
+          type: string
+          enum:
+          - post
+          - term
+          - post-format
+      - name: subtype
+        in: query
+        description: Limit results to a subtype, e.g. `post` or `page`.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/embed'
+      responses:
+        '200':
+          description: A page of search hits.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchResult'
+        '400':
+          $ref: '#/components/responses/InvalidParam'
+components:
+  schemas:
+    Error:
+      type: object
+      description: The WordPress REST error envelope. This is NOT RFC 9457 Problem Details — the media type is application/json, there is no `type` URI, and the HTTP status is repeated inside `data.status`.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+          e.g. rest_post_invalid_id.: null
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+            details:
+              type: object
+    SearchResult:
+      type: object
+      description: A lightweight search hit. Use `_links.self` (or `_embed`) to fetch the full object.
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          description: Plain string here
+          not a rendered object.: null
+        url:
+          type: string
+          format: uri
+        type:
+          type: string
+        subtype:
+          type: string
+        _links:
+          $ref: '#/components/schemas/Links'
+    Links:
+      type: object
+      description: HAL-style relation map (self, collection, about, author, wp:featuredmedia, wp:attachment, wp:term, replies). Appending `_embed` inlines these under `_embedded`.
+      additionalProperties:
+        type: array
+        items:
+          type: object
+          properties:
+            href:
+              type: string
+              format: uri
+            embeddable:
+              type: boolean
+            templated:
+              type: boolean
+  parameters:
+    embed:
+      name: _embed
+      in: query
+      description: Inline linked resources (author, featured media, terms) under `_embedded`, resolving relationships in one round trip.
+      schema:
+        type: boolean
+    perPage:
+      name: per_page
+      in: query
+      description: Items per page. The server rejects values outside 1-100 with HTTP 400.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    page:
+      name: page
+      in: query
+      description: 1-based page number.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+  responses:
+    InvalidParam:
+      description: A query parameter failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+  headers:
+    XWPTotalPages:
+      description: Total number of pages available at the current per_page.
+      schema:
+        type: integer
+    XWPTotal:
+      description: Total number of items in the collection, before pagination.
+      schema:
+        type: integer
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: WordPress application passwords (HTTP Basic per RFC 7617), advertised by the site's own route index. Required only for the write and administrative routes, none of which appear in this document. Arbor Biotechnologies issues no public credentials, so this scheme is declared by the platform but unreachable for third parties.
+externalDocs:
+  description: WordPress REST API handbook — the upstream reference for these routes and parameters.
+  url: https://developer.wordpress.org/rest-api/reference/

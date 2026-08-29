@@ -1,0 +1,168 @@
+openapi: 3.2.0
+info:
+  title: Arbor Biotechnologies Content API (WordPress REST) Embed API
+  version: 1.0.0
+  summary: Read-only, anonymously accessible content API served by the Arbor Biotechnologies corporate site.
+  description: 'Arbor Biotechnologies publishes no product or developer API. This document was DERIVED by API Evangelist from the live WordPress REST route index at https://arbor.bio/wp-json (18 namespaces, 341 declared routes) on 2026-07-31, and reduced to only those operations that were individually probed WITHOUT credentials and observed returning HTTP 200.
+
+
+    It is an incidental content-management surface, not a supported API product: Arbor issues no keys, publishes no developer documentation, offers no support channel for it, and its terms of use do not mention API access. Every write, administrative and site-configuration route declared in the route index is excluded here because anonymous callers receive 401 (`rest_forbidden`, `rest_cannot_view_plugins`, `rest_cannot_view_themes`, `rest_user_cannot_view`) or 403 (`rest_comment_disabled`).
+
+
+    Observed collection sizes on 2026-07-31: 59 posts (press releases, 2018-2026), 11 pages, 11 categories, 0 tags, 394 media items reported by X-WP-Total of which 4 are returned to anonymous callers, 60 searchable objects, 1 contact form.'
+  contact:
+    name: Arbor Biotechnologies
+    url: https://arbor.bio/get-in-touch/
+  license:
+    name: Proprietary — see Arbor Biotechnologies Terms of Use
+    url: https://arbor.bio/terms-of-use/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-derived-from: https://arbor.bio/wp-json
+  x-derived-on: '2026-07-31'
+  x-provider-published: false
+  x-api-posture: incidental-cms-surface
+servers:
+- url: https://arbor.bio/wp-json
+  description: Production WordPress REST API on the Arbor Biotechnologies corporate site.
+security: []
+tags:
+- name: embed
+  description: oEmbed and SEO head metadata.
+paths:
+  /oembed/1.0/embed:
+    get:
+      operationId: getOembed
+      summary: Get oEmbed data for an Arbor URL
+      description: oEmbed 1.0 discovery for any arbor.bio URL — returns provider name, title, author, thumbnail and an embeddable HTML blockquote.
+      tags:
+      - embed
+      parameters:
+      - name: url
+        in: query
+        required: true
+        description: The arbor.bio URL to describe.
+        schema:
+          type: string
+          format: uri
+      - name: format
+        in: query
+        description: Response format.
+        schema:
+          type: string
+          enum:
+          - json
+          - xml
+          default: json
+      - name: maxwidth
+        in: query
+        schema:
+          type: integer
+          default: 600
+      responses:
+        '200':
+          description: The oEmbed document.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Oembed'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /yoast/v1/get_head:
+    get:
+      operationId: getYoastHead
+      summary: Get SEO head metadata for a URL
+      description: Yoast SEO plugin route returning the rendered `<head>` SEO block (Open Graph, Twitter card, schema.org JSON-LD) for any arbor.bio URL. Useful for extracting structured Organization / Article metadata without scraping the page.
+      tags:
+      - embed
+      parameters:
+      - name: url
+        in: query
+        required: true
+        description: The arbor.bio URL to describe.
+        schema:
+          type: string
+          format: uri
+      responses:
+        '200':
+          description: An object with an `html` string containing the SEO head block.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  html:
+                    type: string
+                  json:
+                    type: object
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Error:
+      type: object
+      description: The WordPress REST error envelope. This is NOT RFC 9457 Problem Details — the media type is application/json, there is no `type` URI, and the HTTP status is repeated inside `data.status`.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+          e.g. rest_post_invalid_id.: null
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+            details:
+              type: object
+    Oembed:
+      type: object
+      properties:
+        version:
+          type: string
+          const: '1.0'
+        provider_name:
+          type: string
+        provider_url:
+          type: string
+          format: uri
+        title:
+          type: string
+        type:
+          type: string
+        width:
+          type: integer
+        height:
+          type: integer
+        html:
+          type: string
+        thumbnail_url:
+          type: string
+          format: uri
+  responses:
+    NotFound:
+      description: No route or resource matched.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_no_route
+            message: No route was found matching the URL and request method.
+            data:
+              status: 404
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: WordPress application passwords (HTTP Basic per RFC 7617), advertised by the site's own route index. Required only for the write and administrative routes, none of which appear in this document. Arbor Biotechnologies issues no public credentials, so this scheme is declared by the platform but unreachable for third parties.
+externalDocs:
+  description: WordPress REST API handbook — the upstream reference for these routes and parameters.
+  url: https://developer.wordpress.org/rest-api/reference/

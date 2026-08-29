@@ -1,0 +1,264 @@
+openapi: 3.2.0
+info:
+  title: Arbor Biotechnologies Content API (WordPress REST) Media API
+  version: 1.0.0
+  summary: Read-only, anonymously accessible content API served by the Arbor Biotechnologies corporate site.
+  description: 'Arbor Biotechnologies publishes no product or developer API. This document was DERIVED by API Evangelist from the live WordPress REST route index at https://arbor.bio/wp-json (18 namespaces, 341 declared routes) on 2026-07-31, and reduced to only those operations that were individually probed WITHOUT credentials and observed returning HTTP 200.
+
+
+    It is an incidental content-management surface, not a supported API product: Arbor issues no keys, publishes no developer documentation, offers no support channel for it, and its terms of use do not mention API access. Every write, administrative and site-configuration route declared in the route index is excluded here because anonymous callers receive 401 (`rest_forbidden`, `rest_cannot_view_plugins`, `rest_cannot_view_themes`, `rest_user_cannot_view`) or 403 (`rest_comment_disabled`).
+
+
+    Observed collection sizes on 2026-07-31: 59 posts (press releases, 2018-2026), 11 pages, 11 categories, 0 tags, 394 media items reported by X-WP-Total of which 4 are returned to anonymous callers, 60 searchable objects, 1 contact form.'
+  contact:
+    name: Arbor Biotechnologies
+    url: https://arbor.bio/get-in-touch/
+  license:
+    name: Proprietary — see Arbor Biotechnologies Terms of Use
+    url: https://arbor.bio/terms-of-use/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-derived-from: https://arbor.bio/wp-json
+  x-derived-on: '2026-07-31'
+  x-provider-published: false
+  x-api-posture: incidental-cms-surface
+servers:
+- url: https://arbor.bio/wp-json
+  description: Production WordPress REST API on the Arbor Biotechnologies corporate site.
+security: []
+tags:
+- name: media
+  description: The media library.
+paths:
+  /wp/v2/media:
+    get:
+      operationId: listMedia
+      summary: List media items
+      description: List media library items. X-WP-Total reported 394 on 2026-07-31, but anonymous callers were returned only 4 items — the site restricts most of the library to authenticated users, so the header count and the visible body disagree by design.
+      tags:
+      - media
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/fields'
+      - name: media_type
+        in: query
+        description: Limit to a media type.
+        schema:
+          type: string
+          enum:
+          - image
+          - video
+          - text
+          - application
+          - audio
+          - file
+      responses:
+        '200':
+          description: A page of media items.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+        '400':
+          $ref: '#/components/responses/InvalidParam'
+  /wp/v2/media/{id}:
+    get:
+      operationId: getMedia
+      summary: Get a media item
+      description: Retrieve a single media item by its integer id.
+      tags:
+      - media
+      parameters:
+      - $ref: '#/components/parameters/idPath'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: The media item.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        '404':
+          $ref: '#/components/responses/InvalidPostId'
+components:
+  schemas:
+    Error:
+      type: object
+      description: The WordPress REST error envelope. This is NOT RFC 9457 Problem Details — the media type is application/json, there is no `type` URI, and the HTTP status is repeated inside `data.status`.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+          e.g. rest_post_invalid_id.: null
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+            details:
+              type: object
+    Links:
+      type: object
+      description: HAL-style relation map (self, collection, about, author, wp:featuredmedia, wp:attachment, wp:term, replies). Appending `_embed` inlines these under `_embedded`.
+      additionalProperties:
+        type: array
+        items:
+          type: object
+          properties:
+            href:
+              type: string
+              format: uri
+            embeddable:
+              type: boolean
+            templated:
+              type: boolean
+    Media:
+      type: object
+      description: A media library item.
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        slug:
+          type: string
+        type:
+          type: string
+          const: attachment
+        link:
+          type: string
+          format: uri
+        title:
+          $ref: '#/components/schemas/RenderedText'
+        author:
+          type: integer
+        media_type:
+          type: string
+          enum:
+          - image
+          - file
+        mime_type:
+          type: string
+        source_url:
+          type: string
+          format: uri
+          description: Direct URL to the original file.
+        alt_text:
+          type: string
+        caption:
+          $ref: '#/components/schemas/RenderedText'
+        media_details:
+          type: object
+          description: Width
+          height and the generated size variants.: null
+        post:
+          type:
+          - integer
+          - 'null'
+          description: The object this file was uploaded to.
+        _links:
+          $ref: '#/components/schemas/Links'
+    RenderedText:
+      type: object
+      description: WordPress renders text fields into an object with a `rendered` HTML string.
+      properties:
+        rendered:
+          type: string
+  parameters:
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    perPage:
+      name: per_page
+      in: query
+      description: Items per page. The server rejects values outside 1-100 with HTTP 400.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    idPath:
+      name: id
+      in: path
+      required: true
+      description: Integer object id.
+      schema:
+        type: integer
+    page:
+      name: page
+      in: query
+      description: 1-based page number.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large.
+      schema:
+        type: string
+      example: id,date,slug,link,title
+  responses:
+    InvalidPostId:
+      description: No object exists with that id, or it is not publicly readable.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_post_invalid_id
+            message: Invalid post ID.
+            data:
+              status: 404
+    InvalidParam:
+      description: A query parameter failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+  headers:
+    XWPTotalPages:
+      description: Total number of pages available at the current per_page.
+      schema:
+        type: integer
+    XWPTotal:
+      description: Total number of items in the collection, before pagination.
+      schema:
+        type: integer
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: WordPress application passwords (HTTP Basic per RFC 7617), advertised by the site's own route index. Required only for the write and administrative routes, none of which appear in this document. Arbor Biotechnologies issues no public credentials, so this scheme is declared by the platform but unreachable for third parties.
+externalDocs:
+  description: WordPress REST API handbook — the upstream reference for these routes and parameters.
+  url: https://developer.wordpress.org/rest-api/reference/
