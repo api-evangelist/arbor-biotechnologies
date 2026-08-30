@@ -57,6 +57,8 @@ apis:
   humanURL: https://arbor.bio/stay-updated/
   baseURL: https://arbor.bio/wp-json
   tags:
+  - Embed
+  tags_raw:
   - embed
   properties:
   - type: OpenAPI
@@ -83,6 +85,8 @@ apis:
   humanURL: https://arbor.bio/stay-updated/
   baseURL: https://arbor.bio/wp-json
   tags:
+  - Forms
+  tags_raw:
   - forms
   properties:
   - type: OpenAPI
@@ -109,6 +113,8 @@ apis:
   humanURL: https://arbor.bio/stay-updated/
   baseURL: https://arbor.bio/wp-json
   tags:
+  - Media
+  tags_raw:
   - media
   properties:
   - type: OpenAPI
@@ -135,6 +141,8 @@ apis:
   humanURL: https://arbor.bio/stay-updated/
   baseURL: https://arbor.bio/wp-json
   tags:
+  - Metadata
+  tags_raw:
   - metadata
   properties:
   - type: OpenAPI
@@ -161,6 +169,8 @@ apis:
   humanURL: https://arbor.bio/stay-updated/
   baseURL: https://arbor.bio/wp-json
   tags:
+  - Pages
+  tags_raw:
   - pages
   properties:
   - type: OpenAPI
@@ -187,6 +197,8 @@ apis:
   humanURL: https://arbor.bio/stay-updated/
   baseURL: https://arbor.bio/wp-json
   tags:
+  - Posts
+  tags_raw:
   - posts
   properties:
   - type: OpenAPI
@@ -213,6 +225,8 @@ apis:
   humanURL: https://arbor.bio/stay-updated/
   baseURL: https://arbor.bio/wp-json
   tags:
+  - Search
+  tags_raw:
   - search
   properties:
   - type: OpenAPI
