@@ -3,13 +3,7 @@ info:
   title: Arbor Biotechnologies Content API (WordPress REST) Posts API
   version: 1.0.0
   summary: Read-only, anonymously accessible content API served by the Arbor Biotechnologies corporate site.
-  description: 'Arbor Biotechnologies publishes no product or developer API. This document was DERIVED by API Evangelist from the live WordPress REST route index at https://arbor.bio/wp-json (18 namespaces, 341 declared routes) on 2026-07-31, and reduced to only those operations that were individually probed WITHOUT credentials and observed returning HTTP 200.
-
-
-    It is an incidental content-management surface, not a supported API product: Arbor issues no keys, publishes no developer documentation, offers no support channel for it, and its terms of use do not mention API access. Every write, administrative and site-configuration route declared in the route index is excluded here because anonymous callers receive 401 (`rest_forbidden`, `rest_cannot_view_plugins`, `rest_cannot_view_themes`, `rest_user_cannot_view`) or 403 (`rest_comment_disabled`).
-
-
-    Observed collection sizes on 2026-07-31: 59 posts (press releases, 2018-2026), 11 pages, 11 categories, 0 tags, 394 media items reported by X-WP-Total of which 4 are returned to anonymous callers, 60 searchable objects, 1 contact form.'
+  description: Arbor Biotechnologies publishes no product or developer API.
   contact:
     name: Arbor Biotechnologies
     url: https://arbor.bio/get-in-touch/
@@ -26,7 +20,7 @@ servers:
   description: Production WordPress REST API on the Arbor Biotechnologies corporate site.
 security: []
 tags:
-- name: posts
+- name: Posts
   description: Press releases and company announcements.
 paths:
   /wp/v2/posts:
@@ -35,7 +29,7 @@ paths:
       summary: List press releases
       description: List published posts — Arbor's press releases and company announcements. 59 items observed on 2026-07-31, spanning 2018 to 2026. Paginated; total count and page count are returned in the X-WP-Total and X-WP-TotalPages headers.
       tags:
-      - posts
+      - Posts
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/perPage'
@@ -80,7 +74,7 @@ paths:
       summary: Get a press release
       description: Retrieve a single published post by its integer id.
       tags:
-      - posts
+      - Posts
       parameters:
       - $ref: '#/components/parameters/idPath'
       - $ref: '#/components/parameters/fields'
@@ -95,7 +89,177 @@ paths:
         '404':
           $ref: '#/components/responses/InvalidPostId'
 components:
+  responses:
+    InvalidParam:
+      description: A query parameter failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+    InvalidPostId:
+      description: No object exists with that id, or it is not publicly readable.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_post_invalid_id
+            message: Invalid post ID.
+            data:
+              status: 404
+  parameters:
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large.
+      schema:
+        type: string
+      example: id,date,slug,link,title
+    page:
+      name: page
+      in: query
+      description: 1-based page number.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    idPath:
+      name: id
+      in: path
+      required: true
+      description: Integer object id.
+      schema:
+        type: integer
+    order:
+      name: order
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    after:
+      name: after
+      in: query
+      description: Limit to items published after an ISO 8601 date.
+      schema:
+        type: string
+        format: date-time
+    before:
+      name: before
+      in: query
+      description: Limit to items published before an ISO 8601 date.
+      schema:
+        type: string
+        format: date-time
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    perPage:
+      name: per_page
+      in: query
+      description: Items per page. The server rejects values outside 1-100 with HTTP 400.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    orderbyPost:
+      name: orderby
+      in: query
+      schema:
+        type: string
+        enum:
+        - author
+        - date
+        - id
+        - include
+        - modified
+        - parent
+        - relevance
+        - slug
+        - title
+        default: date
+    slug:
+      name: slug
+      in: query
+      description: Limit results to one or more slugs.
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+      explode: false
+    embed:
+      name: _embed
+      in: query
+      description: Inline linked resources (author, featured media, terms) under `_embedded`, resolving relationships in one round trip.
+      schema:
+        type: boolean
+  headers:
+    XWPTotalPages:
+      description: Total number of pages available at the current per_page.
+      schema:
+        type: integer
+    XWPTotal:
+      description: Total number of items in the collection, before pagination.
+      schema:
+        type: integer
+    Link:
+      description: RFC 8288 pagination links (rel=next, rel=prev).
+      schema:
+        type: string
   schemas:
+    Links:
+      type: object
+      description: HAL-style relation map (self, collection, about, author, wp:featuredmedia, wp:attachment, wp:term, replies). Appending `_embed` inlines these under `_embedded`.
+      additionalProperties:
+        type: array
+        items:
+          type: object
+          properties:
+            href:
+              type: string
+              format: uri
+            embeddable:
+              type: boolean
+            templated:
+              type: boolean
+    Error:
+      type: object
+      description: The WordPress REST error envelope. This is NOT RFC 9457 Problem Details — the media type is application/json, there is no `type` URI, and the HTTP status is repeated inside `data.status`.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+          e.g. rest_post_invalid_id.: null
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+            details:
+              type: object
     Post:
       type: object
       description: A published press release or company announcement.
@@ -185,176 +349,6 @@ components:
       properties:
         rendered:
           type: string
-    Error:
-      type: object
-      description: The WordPress REST error envelope. This is NOT RFC 9457 Problem Details — the media type is application/json, there is no `type` URI, and the HTTP status is repeated inside `data.status`.
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code
-          e.g. rest_post_invalid_id.: null
-        message:
-          type: string
-          description: Human-readable message.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-            params:
-              type: object
-            details:
-              type: object
-    Links:
-      type: object
-      description: HAL-style relation map (self, collection, about, author, wp:featuredmedia, wp:attachment, wp:term, replies). Appending `_embed` inlines these under `_embedded`.
-      additionalProperties:
-        type: array
-        items:
-          type: object
-          properties:
-            href:
-              type: string
-              format: uri
-            embeddable:
-              type: boolean
-            templated:
-              type: boolean
-  parameters:
-    perPage:
-      name: per_page
-      in: query
-      description: Items per page. The server rejects values outside 1-100 with HTTP 400.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
-    fields:
-      name: _fields
-      in: query
-      description: Comma-separated allowlist of response fields. Strongly recommended — a full post object carries rendered HTML content plus a `yoast_head` block and is large.
-      schema:
-        type: string
-      example: id,date,slug,link,title
-    embed:
-      name: _embed
-      in: query
-      description: Inline linked resources (author, featured media, terms) under `_embedded`, resolving relationships in one round trip.
-      schema:
-        type: boolean
-    before:
-      name: before
-      in: query
-      description: Limit to items published before an ISO 8601 date.
-      schema:
-        type: string
-        format: date-time
-    order:
-      name: order
-      in: query
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-        default: desc
-    page:
-      name: page
-      in: query
-      description: 1-based page number.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    idPath:
-      name: id
-      in: path
-      required: true
-      description: Integer object id.
-      schema:
-        type: integer
-    slug:
-      name: slug
-      in: query
-      description: Limit results to one or more slugs.
-      schema:
-        type: array
-        items:
-          type: string
-      style: form
-      explode: false
-    orderbyPost:
-      name: orderby
-      in: query
-      schema:
-        type: string
-        enum:
-        - author
-        - date
-        - id
-        - include
-        - modified
-        - parent
-        - relevance
-        - slug
-        - title
-        default: date
-    search:
-      name: search
-      in: query
-      description: Limit results to those matching a string.
-      schema:
-        type: string
-    after:
-      name: after
-      in: query
-      description: Limit to items published after an ISO 8601 date.
-      schema:
-        type: string
-        format: date-time
-  headers:
-    XWPTotal:
-      description: Total number of items in the collection, before pagination.
-      schema:
-        type: integer
-    XWPTotalPages:
-      description: Total number of pages available at the current per_page.
-      schema:
-        type: integer
-    Link:
-      description: RFC 8288 pagination links (rel=next, rel=prev).
-      schema:
-        type: string
-  responses:
-    InvalidPostId:
-      description: No object exists with that id, or it is not publicly readable.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_post_invalid_id
-            message: Invalid post ID.
-            data:
-              status: 404
-    InvalidParam:
-      description: A query parameter failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_invalid_param
-            message: 'Invalid parameter(s): per_page'
-            data:
-              status: 400
-              params:
-                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
   securitySchemes:
     applicationPassword:
       type: http

@@ -1,7 +1,7 @@
 {
   "provider": "arbor-biotechnologies",
   "sources": [
-    "arbor-biotechnologies-content-openapi.yml"
+    "_ae-authored/arbor-biotechnologies-content-openapi.yml"
   ],
   "outputs": [
     "arbor-biotechnologies-embed-api-openapi.yml",
@@ -13,14 +13,22 @@
     "arbor-biotechnologies-search-api-openapi.yml",
     "arbor-biotechnologies-taxonomies-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/arbor-biotechnologies-content-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (0 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "arbor-biotechnologies-content-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "apis.yml register: written (+8 apis, 8 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "arbor-biotechnologies-embed-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "arbor-biotechnologies-forms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "arbor-biotechnologies-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "arbor-biotechnologies-metadata-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "arbor-biotechnologies-pages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "arbor-biotechnologies-posts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "arbor-biotechnologies-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "arbor-biotechnologies-taxonomies-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

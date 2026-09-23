@@ -3,13 +3,7 @@ info:
   title: Arbor Biotechnologies Content API (WordPress REST) Embed API
   version: 1.0.0
   summary: Read-only, anonymously accessible content API served by the Arbor Biotechnologies corporate site.
-  description: 'Arbor Biotechnologies publishes no product or developer API. This document was DERIVED by API Evangelist from the live WordPress REST route index at https://arbor.bio/wp-json (18 namespaces, 341 declared routes) on 2026-07-31, and reduced to only those operations that were individually probed WITHOUT credentials and observed returning HTTP 200.
-
-
-    It is an incidental content-management surface, not a supported API product: Arbor issues no keys, publishes no developer documentation, offers no support channel for it, and its terms of use do not mention API access. Every write, administrative and site-configuration route declared in the route index is excluded here because anonymous callers receive 401 (`rest_forbidden`, `rest_cannot_view_plugins`, `rest_cannot_view_themes`, `rest_user_cannot_view`) or 403 (`rest_comment_disabled`).
-
-
-    Observed collection sizes on 2026-07-31: 59 posts (press releases, 2018-2026), 11 pages, 11 categories, 0 tags, 394 media items reported by X-WP-Total of which 4 are returned to anonymous callers, 60 searchable objects, 1 contact form.'
+  description: Arbor Biotechnologies publishes no product or developer API.
   contact:
     name: Arbor Biotechnologies
     url: https://arbor.bio/get-in-touch/
@@ -26,7 +20,7 @@ servers:
   description: Production WordPress REST API on the Arbor Biotechnologies corporate site.
 security: []
 tags:
-- name: embed
+- name: Embed
   description: oEmbed and SEO head metadata.
 paths:
   /oembed/1.0/embed:
@@ -35,7 +29,7 @@ paths:
       summary: Get oEmbed data for an Arbor URL
       description: oEmbed 1.0 discovery for any arbor.bio URL — returns provider name, title, author, thumbnail and an embeddable HTML blockquote.
       tags:
-      - embed
+      - Embed
       parameters:
       - name: url
         in: query
@@ -71,9 +65,9 @@ paths:
     get:
       operationId: getYoastHead
       summary: Get SEO head metadata for a URL
-      description: Yoast SEO plugin route returning the rendered `<head>` SEO block (Open Graph, Twitter card, schema.org JSON-LD) for any arbor.bio URL. Useful for extracting structured Organization / Article metadata without scraping the page.
+      description: Yoast SEO plugin route returning the rendered `` SEO block (Open Graph, Twitter card, schema.org JSON-LD) for any arbor.bio URL. Useful for extracting structured Organization / Article metadata without scraping the page.
       tags:
-      - embed
+      - Embed
       parameters:
       - name: url
         in: query
@@ -97,31 +91,19 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: No route or resource matched.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_no_route
+            message: No route was found matching the URL and request method.
+            data:
+              status: 404
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST error envelope. This is NOT RFC 9457 Problem Details — the media type is application/json, there is no `type` URI, and the HTTP status is repeated inside `data.status`.
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code
-          e.g. rest_post_invalid_id.: null
-        message:
-          type: string
-          description: Human-readable message.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-            params:
-              type: object
-            details:
-              type: object
     Oembed:
       type: object
       properties:
@@ -146,18 +128,30 @@ components:
         thumbnail_url:
           type: string
           format: uri
-  responses:
-    NotFound:
-      description: No route or resource matched.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_no_route
-            message: No route was found matching the URL and request method.
-            data:
-              status: 404
+    Error:
+      type: object
+      description: The WordPress REST error envelope. This is NOT RFC 9457 Problem Details — the media type is application/json, there is no `type` URI, and the HTTP status is repeated inside `data.status`.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+          e.g. rest_post_invalid_id.: null
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+            details:
+              type: object
   securitySchemes:
     applicationPassword:
       type: http

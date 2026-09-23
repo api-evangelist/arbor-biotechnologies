@@ -1,15 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Arbor Biotechnologies Content API (WordPress REST) Metadata API
+  title: Arbor Biotechnologies Content API (WordPress REST) Metadata…
   version: 1.0.0
   summary: Read-only, anonymously accessible content API served by the Arbor Biotechnologies corporate site.
-  description: 'Arbor Biotechnologies publishes no product or developer API. This document was DERIVED by API Evangelist from the live WordPress REST route index at https://arbor.bio/wp-json (18 namespaces, 341 declared routes) on 2026-07-31, and reduced to only those operations that were individually probed WITHOUT credentials and observed returning HTTP 200.
-
-
-    It is an incidental content-management surface, not a supported API product: Arbor issues no keys, publishes no developer documentation, offers no support channel for it, and its terms of use do not mention API access. Every write, administrative and site-configuration route declared in the route index is excluded here because anonymous callers receive 401 (`rest_forbidden`, `rest_cannot_view_plugins`, `rest_cannot_view_themes`, `rest_user_cannot_view`) or 403 (`rest_comment_disabled`).
-
-
-    Observed collection sizes on 2026-07-31: 59 posts (press releases, 2018-2026), 11 pages, 11 categories, 0 tags, 394 media items reported by X-WP-Total of which 4 are returned to anonymous callers, 60 searchable objects, 1 contact form.'
+  description: Arbor Biotechnologies publishes no product or developer API.
   contact:
     name: Arbor Biotechnologies
     url: https://arbor.bio/get-in-touch/
@@ -26,7 +20,7 @@ servers:
   description: Production WordPress REST API on the Arbor Biotechnologies corporate site.
 security: []
 tags:
-- name: metadata
+- name: Metadata
   description: Registered post types, taxonomies and statuses.
 paths:
   /wp/v2/types:
@@ -35,7 +29,7 @@ paths:
       summary: List registered post types
       description: The registered post types and their REST base paths. 15 observed, of which only `post`, `page`, `attachment` and `wpcf7_contact_form` are anonymously readable.
       tags:
-      - metadata
+      - Metadata
       responses:
         '200':
           description: A map of post type name to definition.
@@ -50,7 +44,7 @@ paths:
       operationId: getType
       summary: Get one registered post type
       tags:
-      - metadata
+      - Metadata
       parameters:
       - name: type
         in: path
@@ -73,7 +67,7 @@ paths:
       summary: List registered taxonomies
       description: The registered taxonomies and the post types they apply to.
       tags:
-      - metadata
+      - Metadata
       responses:
         '200':
           description: A map of taxonomy name to definition.
@@ -88,7 +82,7 @@ paths:
       operationId: getTaxonomy
       summary: Get one registered taxonomy
       tags:
-      - metadata
+      - Metadata
       parameters:
       - name: taxonomy
         in: path
@@ -110,7 +104,7 @@ paths:
       operationId: listStatuses
       summary: List registered post statuses
       tags:
-      - metadata
+      - Metadata
       responses:
         '200':
           description: A map of status name to definition. Only `publish` is exposed anonymously.
@@ -125,7 +119,7 @@ paths:
       operationId: getStatus
       summary: Get one registered post status
       tags:
-      - metadata
+      - Metadata
       parameters:
       - name: status
         in: path
@@ -144,45 +138,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST error envelope. This is NOT RFC 9457 Problem Details — the media type is application/json, there is no `type` URI, and the HTTP status is repeated inside `data.status`.
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code
-          e.g. rest_post_invalid_id.: null
-        message:
-          type: string
-          description: Human-readable message.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-            params:
-              type: object
-            details:
-              type: object
-    Links:
-      type: object
-      description: HAL-style relation map (self, collection, about, author, wp:featuredmedia, wp:attachment, wp:term, replies). Appending `_embed` inlines these under `_embedded`.
-      additionalProperties:
-        type: array
-        items:
-          type: object
-          properties:
-            href:
-              type: string
-              format: uri
-            embeddable:
-              type: boolean
-            templated:
-              type: boolean
     PostType:
       type: object
       properties:
@@ -208,6 +163,21 @@ components:
             type: string
         _links:
           $ref: '#/components/schemas/Links'
+    Links:
+      type: object
+      description: HAL-style relation map (self, collection, about, author, wp:featuredmedia, wp:attachment, wp:term, replies). Appending `_embed` inlines these under `_embedded`.
+      additionalProperties:
+        type: array
+        items:
+          type: object
+          properties:
+            href:
+              type: string
+              format: uri
+            embeddable:
+              type: boolean
+            templated:
+              type: boolean
     Status:
       type: object
       properties:
@@ -223,6 +193,30 @@ components:
           type: boolean
         _links:
           $ref: '#/components/schemas/Links'
+    Error:
+      type: object
+      description: The WordPress REST error envelope. This is NOT RFC 9457 Problem Details — the media type is application/json, there is no `type` URI, and the HTTP status is repeated inside `data.status`.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+          e.g. rest_post_invalid_id.: null
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+            details:
+              type: object
     Taxonomy:
       type: object
       properties:
