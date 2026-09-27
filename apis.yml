@@ -64,228 +64,20 @@ tags:
 - Healthcare
 - Private Company
 apis:
-- aid: arbor-biotechnologies:arbor-biotechnologies-embed-api
-  name: Arbor Biotechnologies Embed API
-  description: oEmbed and SEO head metadata.
-  humanURL: https://arbor.bio/stay-updated/
+- aid: arbor-biotechnologies:arbor-bio-website-wordpress-rest
+  name: Arbor Biotechnologies Website (WordPress REST)
+  description: 'The public WordPress REST API (wp-json) of the Arbor Biotechnologies website at arbor.bio:
+    the route index of the site''s content management system, catalogued as one site surface rather than
+    as separate APIs.'
   baseURL: https://arbor.bio/wp-json
   tags:
-  - Embed
-  tags_raw:
-  - embed
+  - WordPress
+  x-surface: platform-generated
   properties:
-  - type: OpenAPI
-    url: openapi/arbor-biotechnologies-embed-api-openapi.yml
-  - type: Authentication
-    url: authentication/arbor-biotechnologies-authentication.yml
-  - type: Conventions
-    url: conventions/arbor-biotechnologies-conventions.yml
-  - type: ErrorCatalog
-    url: errors/arbor-biotechnologies-problem-types.yml
-  - type: DataModel
-    url: data-model/arbor-biotechnologies-data-model.yml
-  - type: Lifecycle
-    url: lifecycle/arbor-biotechnologies-lifecycle.yml
-  - type: Conformance
-    url: conformance/arbor-biotechnologies-conformance.yml
-  - type: APIReference
-    url: https://developer.wordpress.org/rest-api/reference/
-  - type: BlogRSS
-    url: https://arbor.bio/feed/
-- aid: arbor-biotechnologies:arbor-biotechnologies-forms-api
-  name: Arbor Biotechnologies Forms API
-  description: Contact Form 7 form definitions.
-  humanURL: https://arbor.bio/stay-updated/
-  baseURL: https://arbor.bio/wp-json
-  tags:
-  - Forms
-  tags_raw:
-  - forms
-  properties:
-  - type: OpenAPI
-    url: openapi/arbor-biotechnologies-forms-api-openapi.yml
-  - type: Authentication
-    url: authentication/arbor-biotechnologies-authentication.yml
-  - type: Conventions
-    url: conventions/arbor-biotechnologies-conventions.yml
-  - type: ErrorCatalog
-    url: errors/arbor-biotechnologies-problem-types.yml
-  - type: DataModel
-    url: data-model/arbor-biotechnologies-data-model.yml
-  - type: Lifecycle
-    url: lifecycle/arbor-biotechnologies-lifecycle.yml
-  - type: Conformance
-    url: conformance/arbor-biotechnologies-conformance.yml
-  - type: APIReference
-    url: https://developer.wordpress.org/rest-api/reference/
-  - type: BlogRSS
-    url: https://arbor.bio/feed/
-- aid: arbor-biotechnologies:arbor-biotechnologies-media-api
-  name: Arbor Biotechnologies Media API
-  description: The media library.
-  humanURL: https://arbor.bio/stay-updated/
-  baseURL: https://arbor.bio/wp-json
-  tags:
-  - Media
-  tags_raw:
-  - media
-  properties:
-  - type: OpenAPI
-    url: openapi/arbor-biotechnologies-media-api-openapi.yml
-  - type: Authentication
-    url: authentication/arbor-biotechnologies-authentication.yml
-  - type: Conventions
-    url: conventions/arbor-biotechnologies-conventions.yml
-  - type: ErrorCatalog
-    url: errors/arbor-biotechnologies-problem-types.yml
-  - type: DataModel
-    url: data-model/arbor-biotechnologies-data-model.yml
-  - type: Lifecycle
-    url: lifecycle/arbor-biotechnologies-lifecycle.yml
-  - type: Conformance
-    url: conformance/arbor-biotechnologies-conformance.yml
-  - type: APIReference
-    url: https://developer.wordpress.org/rest-api/reference/
-  - type: BlogRSS
-    url: https://arbor.bio/feed/
-- aid: arbor-biotechnologies:arbor-biotechnologies-metadata-api
-  name: Arbor Biotechnologies Metadata API
-  description: Registered post types, taxonomies and statuses.
-  humanURL: https://arbor.bio/stay-updated/
-  baseURL: https://arbor.bio/wp-json
-  tags:
-  - Metadata
-  tags_raw:
-  - metadata
-  properties:
-  - type: OpenAPI
-    url: openapi/arbor-biotechnologies-metadata-api-openapi.yml
-  - type: Authentication
-    url: authentication/arbor-biotechnologies-authentication.yml
-  - type: Conventions
-    url: conventions/arbor-biotechnologies-conventions.yml
-  - type: ErrorCatalog
-    url: errors/arbor-biotechnologies-problem-types.yml
-  - type: DataModel
-    url: data-model/arbor-biotechnologies-data-model.yml
-  - type: Lifecycle
-    url: lifecycle/arbor-biotechnologies-lifecycle.yml
-  - type: Conformance
-    url: conformance/arbor-biotechnologies-conformance.yml
-  - type: APIReference
-    url: https://developer.wordpress.org/rest-api/reference/
-  - type: BlogRSS
-    url: https://arbor.bio/feed/
-- aid: arbor-biotechnologies:arbor-biotechnologies-pages-api
-  name: Arbor Biotechnologies Pages API
-  description: Static site pages — pipeline, what we do, who we are, clinical trial, policies.
-  humanURL: https://arbor.bio/stay-updated/
-  baseURL: https://arbor.bio/wp-json
-  tags:
-  - Pages
-  tags_raw:
-  - pages
-  properties:
-  - type: OpenAPI
-    url: openapi/arbor-biotechnologies-pages-api-openapi.yml
-  - type: Authentication
-    url: authentication/arbor-biotechnologies-authentication.yml
-  - type: Conventions
-    url: conventions/arbor-biotechnologies-conventions.yml
-  - type: ErrorCatalog
-    url: errors/arbor-biotechnologies-problem-types.yml
-  - type: DataModel
-    url: data-model/arbor-biotechnologies-data-model.yml
-  - type: Lifecycle
-    url: lifecycle/arbor-biotechnologies-lifecycle.yml
-  - type: Conformance
-    url: conformance/arbor-biotechnologies-conformance.yml
-  - type: APIReference
-    url: https://developer.wordpress.org/rest-api/reference/
-  - type: BlogRSS
-    url: https://arbor.bio/feed/
-- aid: arbor-biotechnologies:arbor-biotechnologies-posts-api
-  name: Arbor Biotechnologies Posts API
-  description: Press releases and company announcements.
-  humanURL: https://arbor.bio/stay-updated/
-  baseURL: https://arbor.bio/wp-json
-  tags:
-  - Posts
-  tags_raw:
-  - posts
-  properties:
-  - type: OpenAPI
-    url: openapi/arbor-biotechnologies-posts-api-openapi.yml
-  - type: Authentication
-    url: authentication/arbor-biotechnologies-authentication.yml
-  - type: Conventions
-    url: conventions/arbor-biotechnologies-conventions.yml
-  - type: ErrorCatalog
-    url: errors/arbor-biotechnologies-problem-types.yml
-  - type: DataModel
-    url: data-model/arbor-biotechnologies-data-model.yml
-  - type: Lifecycle
-    url: lifecycle/arbor-biotechnologies-lifecycle.yml
-  - type: Conformance
-    url: conformance/arbor-biotechnologies-conformance.yml
-  - type: APIReference
-    url: https://developer.wordpress.org/rest-api/reference/
-  - type: BlogRSS
-    url: https://arbor.bio/feed/
-- aid: arbor-biotechnologies:arbor-biotechnologies-search-api
-  name: Arbor Biotechnologies Search API
-  description: Cross-content search.
-  humanURL: https://arbor.bio/stay-updated/
-  baseURL: https://arbor.bio/wp-json
-  tags:
-  - Search
-  tags_raw:
-  - search
-  properties:
-  - type: OpenAPI
-    url: openapi/arbor-biotechnologies-search-api-openapi.yml
-  - type: Authentication
-    url: authentication/arbor-biotechnologies-authentication.yml
-  - type: Conventions
-    url: conventions/arbor-biotechnologies-conventions.yml
-  - type: ErrorCatalog
-    url: errors/arbor-biotechnologies-problem-types.yml
-  - type: DataModel
-    url: data-model/arbor-biotechnologies-data-model.yml
-  - type: Lifecycle
-    url: lifecycle/arbor-biotechnologies-lifecycle.yml
-  - type: Conformance
-    url: conformance/arbor-biotechnologies-conformance.yml
-  - type: APIReference
-    url: https://developer.wordpress.org/rest-api/reference/
-  - type: BlogRSS
-    url: https://arbor.bio/feed/
-- aid: arbor-biotechnologies:arbor-biotechnologies-taxonomies-api
-  name: Arbor Biotechnologies Taxonomies API
-  description: Categories and tags applied to posts, plus taxonomy metadata.
-  humanURL: https://arbor.bio/stay-updated/
-  baseURL: https://arbor.bio/wp-json
-  tags:
-  - taxonomies
-  properties:
-  - type: OpenAPI
-    url: openapi/arbor-biotechnologies-taxonomies-api-openapi.yml
-  - type: Authentication
-    url: authentication/arbor-biotechnologies-authentication.yml
-  - type: Conventions
-    url: conventions/arbor-biotechnologies-conventions.yml
-  - type: ErrorCatalog
-    url: errors/arbor-biotechnologies-problem-types.yml
-  - type: DataModel
-    url: data-model/arbor-biotechnologies-data-model.yml
-  - type: Lifecycle
-    url: lifecycle/arbor-biotechnologies-lifecycle.yml
-  - type: Conformance
-    url: conformance/arbor-biotechnologies-conformance.yml
-  - type: APIReference
-    url: https://developer.wordpress.org/rest-api/reference/
-  - type: BlogRSS
-    url: https://arbor.bio/feed/
+  - type: Documentation
+    url: https://arbor.bio/wp-json
+  x-platform: wordpress
+  x-platform-surface: rest
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -342,6 +134,18 @@ common:
   url: skills/_index.yml
 - type: LLMsTxt
   url: llms/arbor-biotechnologies-llms.txt
+- type: Authentication
+  url: authentication/arbor-biotechnologies-authentication.yml
+- type: Conventions
+  url: conventions/arbor-biotechnologies-conventions.yml
+- type: ErrorCatalog
+  url: errors/arbor-biotechnologies-problem-types.yml
+- type: DataModel
+  url: data-model/arbor-biotechnologies-data-model.yml
+- type: Lifecycle
+  url: lifecycle/arbor-biotechnologies-lifecycle.yml
+- type: Conformance
+  url: conformance/arbor-biotechnologies-conformance.yml
 x-enrichment:
   date: '2026-07-31'
   status: enriched
