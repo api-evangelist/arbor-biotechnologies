@@ -64,5 +64,100 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Arbor Biotechnologies is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/arbor-biotechnologies_stock/
+Arbor Biotechnologies is a next-generation gene editing company founded in 2016 by Feng Zhang, David Walt, David Scott and Winston Yan, and headquartered in Cambridge, Massachusetts. Its proprietary AI- and machine-learning-guided discovery engine has produced a toolbox of programmable DNA editors spanning knockdown, nuclease excision and compact reverse-transcriptase editing, aimed at functionally curative genomic medicines. The wholly-owned pipeline is focused on liver disease (ABO-101 for primary hyperoxaluria type 1 and ABO-103, both LNP-delivered and partnered with Chiesi Group) and CNS disease (ABO-202, ABO-203 and ABO-204 for ALS, plus ABO-206, all AAV-delivered), alongside collaborative ex vivo cell therapy programs run with Vertex, Allogene, Edigene and Chiesi. Investors include ARCH Venture Partners, Ally Bridge Group, Temasek, TCG and the Samsung Life Science Fund. Arbor operates no product or developer API and publishes no developer portal, SDKs or API documentation; its corporate site does serve the standard WordPress REST API anonymously, which makes its press releases, site pages and taxonomies machine-readable.
+
+**Areas:** Company · Biotechnology · Gene Editing · CRISPR · Genomic Medicine · Life Sciences · Drug Development · Clinical Trials · Neurology · Rare Disease · Healthcare · Private Company
+
+## Arbor Biotechnologies on APIs.io
+
+Everything profiled for Arbor Biotechnologies is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/arbor-biotechnologies/](https://apis.io/providers/arbor-biotechnologies/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [Arbor Biotechnologies Website (WordPress REST)](https://apis.io/apis/arbor-biotechnologies/arbor-bio-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the Arbor Biotechnologies website at arbor.bio: the route index of the site's content management system,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### Collections (1)
+
+Postman and Open Collection request collections.
+
+- [Arbor Biotechnologies Content API (WordPress REST)](https://apis.io/collections/arbor-biotechnologies/open-arbor-biotechnologies-content/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Arbor Biotechnologies Content Overlay](https://apis.io/overlays/arbor-biotechnologies/arbor-biotechnologies-content-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Arbor Biotechnologies Authentication](https://apis.io/security/arbor-biotechnologies/arbor-biotechnologies-authentication/)
+- [Arbor Biotechnologies Domain Security](https://apis.io/security/arbor-biotechnologies/arbor-biotechnologies-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://arbor.bio/)
+- [Support](https://arbor.bio/get-in-touch/)
+- [Blog](https://arbor.bio/stay-updated/)
+- [Terms of service](https://arbor.bio/terms-of-use/)
+- [Privacy policy](https://arbor.bio/privacy-policy/)
+
+## API Evangelist rating
+
+**Kin Score 18.2** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 58.0 |
+| Contract quality | 1.7 |
+| Contract governance | 4.5 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 21.1 |
+
+**Agent readiness 4.1** — human-only
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 19.5** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/arbor-biotechnologies/](https://apis.io/providers/arbor-biotechnologies/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Arbor Biotechnologies: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/arbor-biotechnologies/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
